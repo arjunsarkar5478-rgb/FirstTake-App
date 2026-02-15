@@ -5,6 +5,8 @@
 ### 👥 Team Dhurandhar
 * **Arjun Sarkar** (Student ID: A00032412) - Developer & DevOps
 * **BanyAmin** (Student ID: A00034522) - Developer & Design
+* **Tamim Efdadul Raka** (Student ID: A00021499) - Testing/Docs
+* **Pujeet Patel** (Student ID: A00036389) - Database/QA
 
 ### 🚀 Technical Stack
 * **Frontend:** PUG Templates, CSS, Bootstrap
