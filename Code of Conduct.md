@@ -41,9 +41,9 @@ To ensure we meet our deadlines, all 4 members agree to the following:
 ### C. Conflict Resolution
 In the event of a disagreement:
 
-# 1. We shall endeavor to solve it by in-your-face conversation.
-# 2. In the case that the problem still remains, we will vote as a group (majority rules).
-# 3. In case of the possibility of the item not being resolved, we will refer to the module leader.
+* 1. We shall endeavor to solve it by in-your-face conversation.
+* 2. In the case that the problem still remains, we will vote as a group (majority rules).
+* 3. In case of the possibility of the item not being resolved, we will refer to the module leader.
 
 ## 4. Attribution
 This Code of Conduct is adapted from the **Mozilla Community Participation Guidelines** and the **Contributor Covenant**, version 2.0.
