@@ -9,7 +9,7 @@
 * **Pujeet Patel** (Student ID: A00036389) - DevOps
 
 ### 🚀 Technical Stack
-* **Frontend:** PUG Templates, CSS, Bootstrap
+* **Frontend:** PUG Templates, CSS, HTML, JavaScript
 * **Backend:** Node.js, Express
 * **Database:** MySQL
 * **Infrastructure:** Docker, Docker Compose
