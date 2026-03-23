@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  .glass-card(style="text-align: center;")
+    //- Placeholder for profile picture
+    div(style="width: 100px; height: 100px; background: #38BDF8; border-radius: 50%; margin: 0 auto 15px auto;")
+    h1(style="margin-bottom: 5px;")= profile.name
+    p(style="color: #93C5FD; margin-top: 0;") #{profile.primaryRole} | #{profile.location}
+    
+    //- Multi-Hyphenate Badges
+    div(style="margin: 15px 0;")
+      each role in profile.roles
+        span(style="background: rgba(56, 189, 248, 0.2); color: #38BDF8; padding: 5px 10px; border-radius: 15px; margin: 0 5px; font-size: 0.9em;")= role
+
+  .glass-card
+    h3 About Me
+    p= profile.bio
+
+  .glass-card
+    h3 Past Collaborations
+    each collab in profile.collaborations
+      div(style="border-left: 3px solid #38BDF8; padding-left: 15px; margin-bottom: 10px;")
+        h4(style="margin: 0 0 5px 0;")= collab.title
+        p(style="margin: 0; font-size: 0.9em;") Role: #{collab.role} | Status: #{collab.status}
+        p(style="margin: 5px 0 0 0; color: #FCD34D;") Rating: #{collab.rating}
