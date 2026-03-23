@@ -1,28 +1,44 @@
-version: '3.3'
+version: "3.8"
+
 services:
   web:
     build:
       context: ./
     volumes:
       - .:/src
-    command: supervisor -e  'js,pug,html' index.js
+    command: supervisor -e 'js,pug,html' index.js
     ports:
       - "3000:3000"
     depends_on:
       - db
+
   db:
-    image: mysql
+    image: mysql:8
+    container_name: firsttake-mysql
     restart: always
-    env_file:
-      - ./.env
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: firsttake
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpass
     ports:
       - "3308:3306"
     volumes:
-      - ./db:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
+      - ./firsttake-db.sql:/docker-entrypoint-initdb.d/firsttake-db.sql
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
+    container_name: firsttake-phpmyadmin
     restart: always
-    env_file:
-      - ./.env
+    depends_on:
+      - db
     ports:
       - "8081:80"
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: firsttake-mysql
+      PMA_PORT: 3306
+
+volumes:
+  mysql_data:
