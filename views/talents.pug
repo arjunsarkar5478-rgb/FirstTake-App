@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 Registered Talent
+  p Browse available crew members and actors.
+
+  each user in users
+    .glass-card
+      h3= user.name
+      p Primary Role: #{user.role}
+      p Location: #{user.location}
+      button.btn-primary View Profile

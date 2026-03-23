@@ -1,0 +1,29 @@
+extends layout
+
+block content
+  h1 Live Opportunities
+  p Pitch a script, cast your indie film, or find a scene partner.
+
+  //- The Tag/Category Filter (Sprint 3 Requirement)
+  div(style="margin-bottom: 20px;")
+    strong Filter by Genre: 
+    span.btn-primary(style="margin-right: 10px; cursor: pointer;") Horror
+    span.btn-primary(style="margin-right: 10px; cursor: pointer;") Sci-Fi
+    span.btn-primary(style="cursor: pointer;") Drama
+
+  //- Loop through the projects array
+  each project in projects
+    .glass-card
+      h2= project.title
+      p 
+        strong Director: 
+        | #{project.director}
+      p 
+        strong Genre: 
+        | #{project.genre}
+      p 
+        strong Seeking: 
+        | #{project.lookingFor}
+      
+      //- A button to view the specific project details
+      button.btn-primary View Details →
