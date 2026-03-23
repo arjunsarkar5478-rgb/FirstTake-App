@@ -1,0 +1,126 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", href="/css/style.css")
+    title FirstTake | Project Listings
+  body.landing-body
+    header.landing-header.glass-card
+      div.logo-container
+        img(src="https://img.icons8.com/color/96/clapperboard.png" width="32" height="32")
+        span.logo-text FirstTake
+      nav.landing-nav
+        a(href="/") Home
+        a(href="/projects") Feed
+        a(href="/talents") Browse Talent
+        a.btn-primary(href="/profile") My Profile
+
+    main
+      //- Center-aligned Title
+      section.section-header(style="text-align: center; margin-bottom: 40px;")
+        h1 Project Listings
+        hr(style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px auto; width: 40%;")
+
+      //- Search Bar (Now searches names, titles, and descriptions)
+      section.search-area
+        input#projectSearch.search-input(type="text" placeholder="Search by name, title, role, or keyword...")
+        
+      //- Multi-Select Genres
+      section.filter-area
+        button.filter-btn.active(onclick="toggleGenre('All', this)") All
+        button.filter-btn(onclick="toggleGenre('Horror', this)") Horror
+        button.filter-btn(onclick="toggleGenre('Sci-Fi', this)") Sci-Fi
+        button.filter-btn(onclick="toggleGenre('Drama', this)") Drama
+        button.filter-btn(onclick="toggleGenre('Comedy', this)") Comedy
+        button.filter-btn(onclick="toggleGenre('Showreel', this)") Showreel
+        button.filter-btn(onclick="toggleGenre('Reel', this)") Reel
+
+      //- The List of Projects
+      section#projectList.project-list
+        if projects && projects.length > 0
+          each project in projects
+            //- Data attributes now include searchable names and text
+            .glass-card.wide-card.project-item(
+                data-genre=project.genre 
+                data-searchable=(project.title + " " + (project.director || '') + " " + project.lookingFor).toLowerCase()
+            )
+              .project-info
+                h2 #{project.title}
+                p 
+                  strong Director: 
+                  span.director-name #{project.director || 'Alex'} | 
+                  strong Genre: 
+                  span.genre-tag #{project.genre}
+                p 
+                  strong Seeking: 
+                  | #{project.lookingFor}
+                p 
+                  strong Location: 
+                  | London, UK
+              .project-link
+                a.btn-outline(href="#") View Details →
+        
+        #noResults.glass-card(style="display: none; text-align: center; padding: 50px;")
+          h3 No projects found.
+          p Try adjusting your search or filters.
+
+    script.
+      let activeGenres = new Set(['All']);
+      const searchInput = document.getElementById('projectSearch');
+      const projectItems = document.querySelectorAll('.project-item');
+
+      function updateDisplay() {
+        const query = searchInput.value.toLowerCase();
+        let visibleCount = 0;
+
+        projectItems.forEach(card => {
+          const cardGenre = card.getAttribute('data-genre');
+          const cardText = card.getAttribute('data-searchable');
+          
+          // Logic: Match if (Genre is in Set OR 'All' is active) AND (Search Query matches)
+          const genreMatch = activeGenres.has('All') || activeGenres.has(cardGenre);
+          const searchMatch = cardText.includes(query);
+
+          if (genreMatch && searchMatch) {
+            card.style.display = 'flex';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        document.getElementById('noResults').style.display = visibleCount === 0 ? 'block' : 'none';
+      }
+
+      function toggleGenre(genre, btn) {
+        if (genre === 'All') {
+          activeGenres.clear();
+          activeGenres.add('All');
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        } else {
+          activeGenres.delete('All');
+          document.querySelector('.filter-btn[onclick*="All"]').classList.remove('active');
+          
+          if (activeGenres.has(genre)) {
+            activeGenres.delete(genre);
+            btn.classList.remove('active');
+          } else {
+            activeGenres.add(genre);
+            btn.classList.add('active');
+          }
+
+          // If everything is unselected, go back to 'All'
+          if (activeGenres.size === 0) {
+            activeGenres.add('All');
+            document.querySelector('.filter-btn[onclick*="All"]').classList.add('active');
+          }
+        }
+        updateDisplay();
+      }
+
+      searchInput.addEventListener('input', updateDisplay);
+
+    footer.glass-card.landing-footer
+      p FirstTake | GDPR Privacy Policy | Safe-Start Guidelines

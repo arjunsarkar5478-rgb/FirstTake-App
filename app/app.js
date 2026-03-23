@@ -1,156 +1,143 @@
-// Import express.js
+// Import required Node.js modules
 const express = require("express");
+const path = require("path");
 
-// 1. Create express app FIRST (This fixes the fatal crash!)
-var app = express();
+// Initialize express application
+const app = express();
 
-// 2. Tell Express to use the 'public' folder for static files like CSS and images
-app.use(express.static('public'));
-app.use(express.static("static")); // Keeping your university scaffolding static folder
-
-// 3. Use the Pug templating engine and set the correct views folder
-app.set('view engine', 'pug');
-app.set('views', './views'); // FIXED: Changed from './app/views' to './views'
-
-// 4. Get the models and database services (From your scaffolding)
-const { Student } = require("./models/student");
+// Import database connection service
 const db = require('./services/db');
 
+// Configure static files directory for CSS and images
+app.use(express.static(path.join(__dirname, 'public')));
 
-// --- YOUR UNIVERSITY SCAFFOLDING ROUTES ---
+// Configure the Pug templating engine and set the views directory
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
 
-// Create a route for root - /
+// --- LIVE DATABASE ROUTES ---
+
+// Render the brand new Landing Page
 app.get("/", function(req, res) {
     res.render("index");
 });
 
-// Task 1 JSON formatted listing of students
-app.get("/all-students", function(req, res) {
-    var sql = 'select * from Students';
-    db.query(sql).then(results => {
-        console.log(results);
-        res.json(results);
-    });
-});
-
-// Task 2 display a formatted list of students
-app.get("/all-students-formatted", function(req, res) {
-    var sql = 'select * from Students';
-    db.query(sql).then(results => {
-        res.render('all-students', {data: results});
-    });
-});
-
-// Task 3 single student page
-app.get("/student-single/:id", async function (req, res) {
-    var stId = req.params.id;
-    var student = new Student(stId);
-    await student.getStudentName();
-    console.log(student);
-    res.send(student);
-});
-
-app.get("/single-student/:id", async function (req, res) {
-    var stId = req.params.id;
-    var student = new Student(stId);
-    await student.getStudentName();
-    res.render('student', {student:student});
-});
-
-// JSON output of all programmes
-app.get("/all-programmes", function(req, res) {
-    var sql = 'select * from Programmes';
-    db.query(sql).then(results => {
-        console.log(results);
-        res.json(results);
-    });
-});
-
-// Single programme page (no formatting or template)
-app.get("/programme-single/:id", async function (req, res) {
-    var pCode = req.params.id;
-    var pSql = "SELECT * FROM Programmes WHERE id = ?";
-    var results = await db.query(pSql, [pCode]);
-    var modSql = "SELECT * FROM Programme_Modules pm JOIN Modules m on m.code = pm.module WHERE programme = ?";
-    var modResults = await db.query(modSql, [pCode]);
-    res.send(JSON.stringify(results) + JSON.stringify(modResults));  
-});
-
-// Create a route for testing the db
-app.get("/sd2-db", function(req, res) {
-    var sql = 'select * from test_table';
-    db.query(sql).then(results => {
-        console.log(results);
-        res.json(results);
-    });
-});
-
-app.get("/goodbye", function(req, res) {
-    res.send("Goodbye world!");
-});
-
-app.get("/hello/:name", function(req, res) {
-    console.log(req.params);
-    res.send("Hello " + req.params.name);
-});
-
-
-// --- YOUR NEW SPRINT 3 FRONTEND ROUTE ---
-
 // Route for the Talents (Users List) Page
-app.get('/talents', (req, res) => {
-    // We pass dummy data here so your PUG file has something to display!
-    const dummyUsers = [
-        { name: 'Olivia', role: 'Aspiring Actor', location: 'London' },
-        { name: 'Alex', role: 'Director', location: 'UK' }
-    ];
-    res.render('talents', { users: dummyUsers }); 
+app.get('/talents', async (req, res) => {
+    try {
+        // Querying name, role, and location
+        const sql = "SELECT full_name AS name, bio AS role, 'London, UK' AS location FROM users";
+        const liveUsers = await db.query(sql);
+        res.render('talents', { users: liveUsers });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error loading talents.");
+    }
 });
+
 // Route for the Project Listing Page (The Feed)
-app.get('/projects', (req, res) => {
-    // Dummy data for film projects
-    const dummyProjects = [
-        { title: 'Weekend Horror Short', director: 'Alex', genre: 'Horror', lookingFor: 'Cinematographer, Sound Engineer' },
-        { title: 'Neon Nights', director: 'Marcus', genre: 'Sci-Fi', lookingFor: 'Lead Actor, Editor' }
-    ];
-    
-    // Render the 'projects.pug' file and pass the data
-    res.render('projects', { projects: dummyProjects });
+app.get('/projects', async (req, res) => {
+    try {
+        // Fetch projects and join with users table
+        const sql = `
+            SELECT 
+                p.title, 
+                p.genre, 
+                p.description AS lookingFor, 
+                u.full_name AS director 
+            FROM project p 
+            LEFT JOIN users u ON p.owner_user_id = u.user_id
+        `;
+        
+        const liveProjects = await db.query(sql);
+        res.render('projects', { projects: liveProjects });
+
+    } catch (error) {
+        // DIAGNOSTIC FIX: Print the exact crash report directly to the web page
+        const errorMessage = `
+            <div style="padding: 20px; font-family: sans-serif;">
+                <h1 style="color: #ef4444;">CRASH REPORT</h1>
+                <h3 style="color: #b91c1c;">Message: ${error.message}</h3>
+                <pre style="background: #f1f5f9; padding: 15px; border-radius: 8px;">${error.stack}</pre>
+            </div>
+        `;
+        res.status(500).send(errorMessage);
+    }
 });
-// Route for the Project Detail Page
-app.get('/project/weekend-horror', (req, res) => {
-    // Dummy data for one specific project and its roles
-    const projectDetail = {
-        title: 'Weekend Horror Short',
-        director: 'Alex',
-        description: 'Shooting a short horror film in London over a weekend. No budget, but food and travel will be provided. Requires a cinematographer with their own RED camera setup or similar.',
-        roles: [
-            { title: 'Cinematographer', requirements: 'Own camera equipment', applicants: 1 },
-            { title: 'Sound Engineer', requirements: 'Boom mic & recorder', applicants: 5 } // This one should trigger your Anti-Crash logic!
-        ]
-    };
-    
-    res.render('project-detail', { project: projectDetail });
+
+// Route for the User Profile Page (Displaying User ID 1 for MVP)
+// --- USER PROFILE ROUTE ---
+app.get('/user/:id', async (req, res) => {
+    try {
+        const userId = req.params.id;
+
+        // 1. Get the User's Information
+        const [userData] = await db.query("SELECT * FROM users WHERE user_id = ?", [userId]);
+        
+        // If the user doesn't exist, stop here
+        if (!userData || userData.length === 0) {
+            return res.status(404).send("User not found.");
+        }
+
+        // 2. Get all Projects owned by this User
+        const [userProjects] = await db.query("SELECT * FROM project WHERE owner_user_id = ? ORDER BY project_id DESC", [userId]);
+
+        // 3. Send both sets of data to the Pug template
+        res.render('profile', { 
+            user: userData[0], 
+            projects: userProjects 
+        });
+
+    } catch (error) {
+        console.error("Database error on User Profile:", error);
+        res.status(500).send("Server Error loading profile.");
+    }
 });
-// Route for the User Profile Page
-app.get('/profile', (req, res) => {
-    // Dummy data for Olivia's profile based on your Sprint 2 wireframes
-    const myProfile = {
-        name: 'Olivia',
-        primaryRole: 'Aspiring Actor',
-        location: 'London, UK',
-        bio: 'I have a day job in the retail industry but desire to establish my acting showreel. I am looking for serious student work which will actually be completed.',
-        roles: ['Director', 'Actor/Talent'], // Multi-Hyphenate Badges!
-        collaborations: [
-            { title: 'The Coffee Shop (Student Film)', role: 'Supporting Actor', status: 'Completed', rating: '★★★★☆' }
-        ]
-    };
-    
-    res.render('profile', { profile: myProfile });
+
+// --- PROJECT DETAILS ROUTE ---
+app.get('/project/:id', async (req, res) => {
+    try {
+        const projectId = req.params.id;
+        
+        // 1. Get the Project Details
+        const projectSql = `
+            SELECT 
+                p.project_id,
+                p.owner_user_id,
+                p.title, 
+                p.genre, 
+                p.description, 
+                u.full_name AS director 
+            FROM project p 
+            LEFT JOIN users u ON p.owner_user_id = u.user_id
+            WHERE p.project_id = ?
+        `;
+        const [projects] = await db.query(projectSql, [projectId]);
+
+        if (!projects || projects.length === 0) {
+            return res.status(404).send("Project not found");
+        }
+
+        // 2. Get the Roles required for this project
+        // (Assuming your table is called project_requirement)
+        const roleSql = `SELECT * FROM project_requirement WHERE project_id = ?`;
+        const [roles] = await db.query(roleSql, [projectId]);
+
+        // 3. Send both project data and roles array to Pug
+        res.render('project_detail', { 
+            project: projects[0],
+            roles: roles 
+        });
+
+    } catch (error) {
+        console.error("Database error on Project Details:", error);
+        res.status(500).send("Server Error");
+    }
 });
+
 // --- START SERVER ---
 
-// Start server on port 3000 (Using '0.0.0.0' so Docker allows the connection)
+// Start server on port 3000 mapping to 0.0.0.0 for Docker compatibility
 app.listen(3000, '0.0.0.0', function(){
-    console.log(`Server running at http://localhost:3000/`);
+    console.log(`FirstTake server running at http://localhost:3000/`);
 });

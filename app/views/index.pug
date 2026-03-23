@@ -1,7 +1,103 @@
-extends layout
-block content
-    h1 #{heading}
-    p first paragraph xxx
-    p now lets loop 
-    each item in data  
-        p #{item}
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", href="/css/style.css")
+    title FirstTake | Stop waiting. Start creating.
+  body.landing-body
+    //- Navigation Bar
+    header.landing-header.glass-card
+      div.logo-container
+       div.logo-container
+       div.logo-container
+       div.logo-container
+        //- Using a developer-friendly CDN that allows external image linking
+        img(src="https://img.icons8.com/color/96/clapperboard.png" width="36" height="36" alt="FirstTake Logo" style="margin-right: 10px;")
+        span.logo-text(style="font-size: 1.8rem;") FirstTake
+      nav.landing-nav
+        a(href="/projects") Feed
+        a(href="#how-it-works") How it Works
+        a(href="#login") Login
+        a.btn-primary(href="#register") Register
+
+    main
+      //- Hero Section
+      section.hero
+        .hero-text
+          h1 Stop waiting.<br>Start creating.
+          p The safest networking platform for indie film creators. Pitch a script, cast your indie film, or find a scene partner to build your showreel.
+          .button-group
+            a.btn-primary(href="/projects") POST PROJECT / SCRIPT
+            a.btn-outline(href="/talents") FIND A ROLE
+            a.btn-outline(href="/talents") FIND SCENE PARTNER
+        .hero-visual
+          //- External image link showing a film crew working on set
+          img.glass-img(src="https://aaft.com/blog/wp-content/uploads/2024/09/pikaso_texttoimage_A-dynamic-scene-with-a-diverse-group-of-filmmakers-1024x701.jpeg", alt="Indie Film Crew on Set")
+      //- How It Works Section
+      section#how-it-works.features-section
+        h2.section-title How FirstTake Connects You
+        .grid-3
+          //- Card 1: Create or Pitch (Updated with your custom Logo)
+          .glass-card.feature-card
+            img(
+              src="https://cdn.textstudio.com/output/sample/normal/3/7/1/5/create-logo-73-5173.png" 
+              alt="Create Logo" 
+              style="width: 120px; height: 120px; object-fit: contain; margin-bottom: 10px;"
+            )
+            h3 Create or Pitch
+            p Directors post casting calls. Writers pitch scripts. Actors request scene partners.
+            
+          //- Card 2: Match & Collab (Team Hands Together Image)
+          .glass-card.feature-card
+            img(src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=300&q=80" alt="Match and Collab" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;")
+            h3 Match & Collab
+            p Apply to roles, team up as Co-Admins, or link up to shoot showreel material.
+            
+          //- Card 3: Safe-Start Meeting (Coffee Shop Meeting Image)
+          .glass-card.feature-card
+            img(src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Safe Meeting" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;")
+            h3 Safe-Start Meeting
+            p Meet your new team in verified public Safe Zones before private contacts are revealed.
+      //- Live Opportunities Preview Section
+      section.opportunities-section
+        .section-header
+          h2.section-title Live Opportunities
+          a.view-all(href="/projects") View all →
+        .grid-3
+          //- Card 1
+          .glass-card.opp-card
+            img.card-img(src="https://mymodernmet.com/wp/wp-content/uploads/2019/05/xavier-portela-hong-kong-glow-11.jpg", alt="Script Preview")
+            .badges
+              span.badge.badge-dark SCRIPT CALL
+              span.badge.badge-light Sci-Fi
+            h3 Neon Nights
+            p.posted-by Posted by: Marcus (Writer)
+            p.seeking Seeking: Director (Co-Admin)
+            button.btn-outline.full-width Read Pitch
+            
+          //- Card 2
+          .glass-card.opp-card
+            img.card-img(src="https://images.unsplash.com/photo-1623126908029-58cb08a2b272?auto=format&fit=crop&w=500&q=80", alt="Film Poster")
+            .badges
+              span.badge.badge-dark CASTING
+              span.badge.badge-light Horror
+            h3 Weekend Horror
+            p.posted-by Posted by: Alex (Director)
+            p.seeking Seeking: Cinematographer, Sound
+            button.btn-outline.full-width Apply Now
+            
+          //- Card 3
+          .glass-card.opp-card
+            img.card-img(src="https://images.unsplash.com/photo-1517630800677-932d836ab680?auto=format&fit=crop&w=500&q=80", alt="Headshot Reference")
+            .badges
+              span.badge.badge-dark ACTOR COLLAB
+              span.badge.badge-light Drama
+            h3 Cafe Argument Scene
+            p.posted-by Posted by: Olivia (Actor)
+            p.seeking Seeking: Scene Partner, Camera Op
+            button.btn-outline.full-width Connect
+
+    //- Footer
+    footer.glass-card.landing-footer
+      p FirstTake | GDPR Privacy Policy | Safe-Start Guidelines

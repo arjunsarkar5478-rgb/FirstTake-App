@@ -1,8 +1,10 @@
-MYSQL_HOST=localhost
-MYSQL_USER=admin
-MYSQL_PASS=password
-MYSQL_ROOT_PASSWORD=password
-MYSQL_DATABASE=sd2-db
+# Team FirstTake Local Docker Settings
+# Copy this file and rename it to .env
+MYSQL_HOST=db
+MYSQL_USER=root
+MYSQL_PASS=root
+MYSQL_ROOT_PASSWORD=root
+MYSQL_DATABASE=firsttake
 MYSQL_ROOT_USER=root
 DB_CONTAINER=db
 DB_PORT=3306

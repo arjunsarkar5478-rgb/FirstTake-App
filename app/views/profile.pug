@@ -1,0 +1,53 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", href="/css/style.css")
+    title FirstTake | #{user.full_name}'s Profile
+  body.landing-body
+    header.landing-header.glass-card
+      div.logo-container
+        img(src="https://img.icons8.com/color/96/clapperboard.png" width="32" height="32")
+        span.logo-text FirstTake
+      nav.landing-nav
+        a(href="/") Home
+        a(href="/projects") Feed
+        a(href="/talents") Browse Talent
+
+    main(style="max-width: 800px; margin: 0 auto; padding-top: 40px;")
+      a(href="/projects" style="color: #38BDF8; text-decoration: none; margin-bottom: 20px; display: inline-block;") ← Back to Feed
+
+      //- User Info Section
+      .glass-card(style="text-align: center; padding: 40px; margin-bottom: 40px;")
+        //- Avatar
+        div.avatar-circle(style="width: 100px; height: 100px; margin: 0 auto 20px auto; border: 3px solid #38BDF8; border-radius: 50%; overflow: hidden;")
+          img(src="https://ui-avatars.com/api/?name=" + user.full_name + "&background=0F172A&color=38BDF8&size=100" style="width: 100%; height: 100%; object-fit: cover;")
+        
+        h1(style="font-size: 2.5rem; color: #F8FAFC; margin-bottom: 10px;") #{user.full_name}
+        p(style="color: #38BDF8; font-weight: bold; margin-bottom: 20px;") 📍 London, UK
+        p(style="color: #CBD5E1; line-height: 1.6; max-width: 600px; margin: 0 auto;") #{user.bio}
+
+      //- User's Projects Section
+      h2(style="margin-bottom: 20px; color: #F8FAFC; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;") Projects by #{user.full_name}
+      
+      section.project-list
+        if projects && projects.length > 0
+          each project in projects
+            .glass-card.wide-card(style="margin-bottom: 20px; padding: 25px; display: flex; justify-content: space-between; align-items: center;")
+              div
+                h3(style="margin-bottom: 10px; color: #F8FAFC; font-size: 1.3rem;") #{project.title}
+                p(style="color: #94A3B8; margin-bottom: 5px;") 
+                  strong Genre: 
+                  | #{project.genre}
+                p(style="color: #94A3B8;") 
+                  strong Seeking: 
+                  | #{project.description}
+              div
+                a.btn-outline(href=`/project/${project.project_id}`) View Details →
+        else
+          .glass-card(style="text-align: center; padding: 30px;")
+            p(style="color: #94A3B8;") This user hasn't posted any projects yet.
+
+    footer.glass-card.landing-footer(style="margin-top: 60px;")
+      p FirstTake | GDPR Privacy Policy | Safe-Start Guidelines
