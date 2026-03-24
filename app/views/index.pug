@@ -28,8 +28,8 @@ html(lang="en")
           h1 Stop waiting.<br>Start creating.
           p The safest networking platform for indie film creators. Pitch a script, cast your indie film, or find a scene partner to build your showreel.
           .button-group
-            a.btn-primary(href="/projects") POST PROJECT / SCRIPT
-            a.btn-outline(href="/talents") FIND A ROLE
+            a.btn-primary(href="/create_project") POST PROJECT / SCRIPT
+            a.btn-outline(href="/projects") FIND A ROLE
             a.btn-outline(href="/talents") FIND SCENE PARTNER
         .hero-visual
           //- External image link showing a film crew working on set
@@ -39,7 +39,7 @@ html(lang="en")
         h2.section-title How FirstTake Connects You
         .grid-3
           //- Card 1: Create or Pitch (Updated with your custom Logo)
-          .glass-card.feature-card
+          .glass-card.feature-card(onclick="window.location.href='/create_project'")
             img(
               src="https://cdn.textstudio.com/output/sample/normal/3/7/1/5/create-logo-73-5173.png" 
               alt="Create Logo" 
@@ -49,7 +49,7 @@ html(lang="en")
             p Directors post casting calls. Writers pitch scripts. Actors request scene partners.
             
           //- Card 2: Match & Collab (Team Hands Together Image)
-          .glass-card.feature-card
+          .glass-card.feature-card(onclick="window.location.href='/projects'")
             img(src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=300&q=80" alt="Match and Collab" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;")
             h3 Match & Collab
             p Apply to roles, team up as Co-Admins, or link up to shoot showreel material.
@@ -74,7 +74,7 @@ html(lang="en")
             h3 Neon Nights
             p.posted-by Posted by: Marcus (Writer)
             p.seeking Seeking: Director (Co-Admin)
-            button.btn-outline.full-width Read Pitch
+            a.btn-outline.full-width(href="/project/3" style="display: block; text-align: center; box-sizing: border-box;") Read Pitch
             
           //- Card 2
           .glass-card.opp-card
@@ -84,8 +84,7 @@ html(lang="en")
               span.badge.badge-light Horror
             h3 Weekend Horror
             p.posted-by Posted by: Alex (Director)
-            p.seeking Seeking: Cinematographer, Sound
-            button.btn-outline.full-width Apply Now
+            a.btn-outline.full-width(href="/project/1" style="display: block; text-align: center; box-sizing: border-box;") Apply Now
             
           //- Card 3
           .glass-card.opp-card
@@ -96,7 +95,7 @@ html(lang="en")
             h3 Cafe Argument Scene
             p.posted-by Posted by: Olivia (Actor)
             p.seeking Seeking: Scene Partner, Camera Op
-            button.btn-outline.full-width Connect
+            a.btn-outline.full-width(href="/project/2" style="display: block; text-align: center; box-sizing: border-box;") Connect
 
     //- Footer
     footer.glass-card.landing-footer

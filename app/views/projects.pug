@@ -58,10 +58,10 @@ html(lang="en")
                   strong Location: 
                   | London, UK
               .project-link
-                //- THIS IS THE MAGIC LINE: It uses the actual MySQL ID number!
-                a.btn-outline(href=`/project/${project.project_id}` style="margin-top: 20px; display: inline-block;") View Details →
+                //- THE FIXED BUTTON IS RIGHT HERE!
+                a.btn-outline(href="/project/" + project.project_id style="margin-top: 20px; display: inline-block;") View Details →
         
-        //- No Results Message (Hidden by default, used by the search script)
+        //- No Results Message
         #noResults.glass-card(style="display: none; text-align: center; padding: 50px;")
           h3 No projects match your search.
           p Try adjusting your search or filters.

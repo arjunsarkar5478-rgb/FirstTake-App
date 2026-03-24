@@ -4,7 +4,7 @@ html(lang="en")
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     link(rel="stylesheet", href="/css/style.css")
-    title FirstTake | #{user.full_name}'s Profile
+    title FirstTake | #{user.full_name}
   body.landing-body
     header.landing-header.glass-card
       div.logo-container
@@ -15,39 +15,49 @@ html(lang="en")
         a(href="/projects") Feed
         a(href="/talents") Browse Talent
 
-    main(style="max-width: 800px; margin: 0 auto; padding-top: 40px;")
-      a(href="/projects" style="color: #38BDF8; text-decoration: none; margin-bottom: 20px; display: inline-block;") ← Back to Feed
+    main(style="max-width: 800px; margin: 40px auto; padding: 0 20px;")
+      //- Back to Feed Navigation
+      div(style="margin-bottom: 20px;")
+        a(href="/projects" style="color: #38bdf8; text-decoration: none;") ← Back to Feed
 
-      //- User Info Section
-      .glass-card(style="text-align: center; padding: 40px; margin-bottom: 40px;")
-        //- Avatar
-        div.avatar-circle(style="width: 100px; height: 100px; margin: 0 auto 20px auto; border: 3px solid #38BDF8; border-radius: 50%; overflow: hidden;")
-          img(src="https://ui-avatars.com/api/?name=" + user.full_name + "&background=0F172A&color=38BDF8&size=100" style="width: 100%; height: 100%; object-fit: cover;")
+      //- Public Profile Header (Read-Only)
+      .glass-card(style="text-align: center; padding: 40px 20px; margin-bottom: 40px;")
+        //- Avatar Circle
+        div(style="width: 100px; height: 100px; border-radius: 50%; background: #0f172a; color: #38bdf8; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 20px auto; border: 2px solid #38bdf8;")
+          | #{user.full_name.charAt(0)}
         
-        h1(style="font-size: 2.5rem; color: #F8FAFC; margin-bottom: 10px;") #{user.full_name}
-        p(style="color: #38BDF8; font-weight: bold; margin-bottom: 20px;") 📍 London, UK
-        p(style="color: #CBD5E1; line-height: 1.6; max-width: 600px; margin: 0 auto;") #{user.bio}
+        h1(style="margin: 0 0 10px 0; font-size: 2.5rem;") #{user.full_name}
+        p(style="color: #38bdf8; margin: 0 0 15px 0;") 📍 London, UK
+        
+        //- THE NEW DUMMY RATING SYSTEM!
+        div(style="display: inline-flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 25px; background: rgba(0,0,0,0.3); padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);")
+          span(style="color: #facc15; font-size: 1.2rem; letter-spacing: 2px;") ★★★★★
+          span(style="color: #e2e8f0; font-size: 1rem; font-weight: bold;") 4.8
+          span(style="color: #94a3b8; font-size: 0.85rem;") (14 Reviews)
 
-      //- User's Projects Section
-      h2(style="margin-bottom: 20px; color: #F8FAFC; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;") Projects by #{user.full_name}
+        p(style="font-size: 1.1rem; line-height: 1.6; max-width: 600px; margin: 0 auto;") 
+          | #{user.bio || 'Filmmaker and creative talent.'}
+
+      //- Public Projects List (Read-Only)
+      h2(style="margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;") Projects by #{user.full_name}
       
-      section.project-list
-        if projects && projects.length > 0
-          each project in projects
-            .glass-card.wide-card(style="margin-bottom: 20px; padding: 25px; display: flex; justify-content: space-between; align-items: center;")
+      if projects && projects.length > 0
+        each project in projects
+          .glass-card(style="margin-bottom: 20px;")
+            div(style="display: flex; justify-content: space-between; align-items: center;")
               div
-                h3(style="margin-bottom: 10px; color: #F8FAFC; font-size: 1.3rem;") #{project.title}
-                p(style="color: #94A3B8; margin-bottom: 5px;") 
+                h3(style="margin: 0 0 10px 0;") #{project.title}
+                p(style="margin: 0 0 5px 0;") 
                   strong Genre: 
-                  | #{project.genre}
-                p(style="color: #94A3B8;") 
+                  span.genre-tag #{project.genre}
+                p(style="margin: 5px 0 0 0;") 
                   strong Seeking: 
                   | #{project.description}
               div
-                a.btn-outline(href=`/project/${project.project_id}`) View Details →
-        else
-          .glass-card(style="text-align: center; padding: 30px;")
-            p(style="color: #94A3B8;") This user hasn't posted any projects yet.
+                a.btn-outline(href="/project/" + project.project_id) View Details →
+      else
+        .glass-card(style="text-align: center; padding: 40px;")
+          p(style="color: #94a3b8;") #{user.full_name} hasn't posted any projects yet.
 
-    footer.glass-card.landing-footer(style="margin-top: 60px;")
+    footer.glass-card.landing-footer(style="margin-top: 50px;")
       p FirstTake | GDPR Privacy Policy | Safe-Start Guidelines

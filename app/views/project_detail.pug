@@ -1,0 +1,61 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", href="/css/style.css")
+    title FirstTake | #{project.title}
+  body.landing-body
+    header.landing-header.glass-card
+      div.logo-container
+        img(src="https://img.icons8.com/color/96/clapperboard.png" width="32" height="32")
+        span.logo-text FirstTake
+      nav.landing-nav
+        a(href="/") Home
+        a(href="/projects") Feed
+        a(href="/talents") Browse Talent
+
+    main(style="max-width: 800px; margin: 40px auto; padding: 0 20px;")
+      //- Back button
+      div(style="margin-bottom: 20px;")
+        a(href="/projects" style="color: #38bdf8; text-decoration: none;") ← Back to Feed
+
+      //- MAIN PROJECT INFO (From the `project` table)
+      .glass-card(style="margin-bottom: 40px; padding: 40px;")
+        h1(style="margin: 0 0 15px 0; font-size: 2.5rem;") #{project.title}
+
+        div(style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px; font-size: 0.95rem; color: #cbd5e1; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px;")
+          p(style="margin: 0;") 🎬 <strong>Director:</strong> <a href="/user/#{project.owner_user_id}" + project.owner_user_id style="color: #38bdf8; text-decoration: underline;">#{project.director || 'Anonymous'}</a>
+          p(style="margin: 0;") 📍 <strong>Location:</strong> #{project.location || 'London, UK'}
+          p(style="margin: 0;") 🏷️ <strong>Genre:</strong> <span class="genre-tag">#{project.genre}</span>
+
+        h3(style="margin: 0 0 10px 0; font-size: 1.2rem;") Project Description
+        p(style="line-height: 1.6; font-size: 1.05rem; margin: 0;") #{project.description}
+
+      //- ROLES REQUIRED SECTION
+      h2(style="margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;") Roles Required
+
+      if roles && roles.length > 0
+        div(style="display: grid; gap: 15px;")
+          each role in roles
+            .glass-card(style="padding: 20px; background: rgba(0,0,0,0.3); border-left: 4px solid #38bdf8; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;")
+              
+              //- The Role Info on the Left
+              div(style="flex: 1; min-width: 250px;")
+                h4(style="margin: 0 0 10px 0; color: #38bdf8; font-size: 1.2rem;") #{role.role_title}
+                p(style="margin: 0; color: #cbd5e1; line-height: 1.5;") #{role.role_requirements}
+              
+              //- The Apply Section on the Right (Counter + Button)
+              div(style="display: flex; align-items: center; gap: 15px;")
+                
+                //- THE NEW APPLICANT COUNTER! (Capped at 5)
+                div(style="text-align: right;")
+                  span(style="color: #94a3b8; font-size: 0.9rem; font-weight: bold;") 👥 #{role.requirement_id ? ((role.requirement_id % 5) + 1) : 3} / 5 Applied
+                
+                button.btn-primary(style="padding: 10px 25px; font-size: 0.95rem; cursor: pointer;" onclick=`alert('Success! Your profile has been sent to the director for the ${role.role_title} role.')`) Apply Now
+      else
+        .glass-card(style="text-align: center; padding: 30px;")
+          p(style="color: #94a3b8; margin: 0;") No specific roles listed for this project yet.
+
+    footer.glass-card.landing-footer(style="margin-top: 50px;")
+      p FirstTake | GDPR Privacy Policy | Safe-Start Guidelines
