@@ -144,7 +144,10 @@ app.get('/create_project', function(req, res) {
 // We are connecting this POST route to the backend!
 app.post('/publish-project', async (req, res) => {
     try {
-        const projectData = req.params.projectData;
+        // FIX 1: Read from req.body instead of req.params!
+        // We use a fallback just in case the form structures the data differently
+        const projectData = req.body.title ? req.body : req.body.projectData;
+        
         console.log("RECEIVED FORM DATA:", projectData);
 
         // For MVP, we will make "Sarah" (User ID 2) the owner of all new projects.
@@ -156,7 +159,9 @@ app.post('/publish-project', async (req, res) => {
             INSERT INTO project (title, genre, location, description, owner_user_id) 
             VALUES (?, ?, ?, ?, ?)`
         ;
-        const [projectResult] = await db.query(projectSql, [
+        
+        // FIX 2: Removed [] brackets around projectResult
+        const projectResult = await db.query(projectSql, [
             projectData.title, 
             projectData.genre, 
             projectData.location, 
@@ -165,19 +170,22 @@ app.post('/publish-project', async (req, res) => {
         ]);
 
         // Get the specific ID of the project we JUST created.
-        // This is needed to link the roles to this project.
-        const newProjectId = projectResult.insertId;
+        // Some MySQL wrappers return the insertId differently, so we check both places
+        const newProjectId = projectResult.insertId || (projectResult[0] ? projectResult[0].insertId : null);
         console.log(`Main Project Inserted (ID: ${newProjectId})`);
 
         // 2. Insert dynamic Roles (if any were provided)
-        if (projectData.roles && Array.isArray(projectData.roles)) {
+        if (projectData.roles) {
+            
+            // Safety Check: Ensure roles is an array, even if the form sends it as an object
+            const rolesArray = Array.isArray(projectData.roles) ? projectData.roles : Object.values(projectData.roles);
             
             console.log("Processing roles...");
             const roleSql = "INSERT INTO project_requirement (project_id, role_title, role_requirements) VALUES (?, ?, ?)";
 
             // Loop through each role submitted from the frontend and save it to MySQL
-            for (let i = 0; i < projectData.roles.length; i++) {
-                const role = projectData.roles[i];
+            for (let i = 0; i < rolesArray.length; i++) {
+                const role = rolesArray[i];
                 // Only insert if the role has a title
                 if (role.title && role.title.trim() !== "") {
                     await db.query(roleSql, [newProjectId, role.title, role.requirements]);
