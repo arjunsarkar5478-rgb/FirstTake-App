@@ -1,0 +1,47 @@
+name: FirstTake CI/CD Guard
+
+# 1. When should this robot run?
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test-docker-build:
+    name: Test Docker Containers
+    runs-on: ubuntu-latest
+
+    steps:
+      # 2. Download the code from the Pull Request
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 3. Create a fake .env file for the robot (Crucial!)
+      # Since we don't push the real .env to GitHub, the robot needs dummy passwords to build the database.
+      - name: Create dummy .env file
+        run: |
+          echo "DB_CONTAINER=db" >> .env
+          echo "DB_PORT=3306" >> .env
+          echo "MYSQL_ROOT_USER=root" >> .env
+          echo "MYSQL_ROOT_PASSWORD=root" >> .env
+          echo "MYSQL_DATABASE=firsttake" >> .env
+
+      # 4. Boot up the Docker containers in the background
+      - name: Build and start Docker containers
+        run: docker-compose up -d --build
+
+      # 5. Wait 15 seconds to give MySQL time to boot up and run the .sql file
+      - name: Wait for Database to initialize
+        run: sleep 15
+
+      # 6. Test 1: Are the containers actually running, or did they crash?
+      - name: Check running containers
+        run: docker ps
+
+      # 7. Test 2: Ping the Express server to see if it responds with a 200 OK status
+      - name: Ping the Web Server
+        run: curl -f http://localhost:3000/ || exit 1
+
+      # 8. Clean up after the test is done
+      - name: Shut down Docker containers
+        if: always()
+        run: docker-compose down -v
