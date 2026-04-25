@@ -2,6 +2,8 @@ name: FirstTake CI/CD Guard
 
 # 1. When should this robot run?
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
