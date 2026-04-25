@@ -29,7 +29,7 @@ jobs:
 
       # 4. Boot up the Docker containers in the background
       - name: Build and start Docker containers
-        run: docker-compose up -d --build
+        run: docker compose up -d --build
 
       # 5. Wait 15 seconds to give MySQL time to boot up and run the .sql file
       - name: Wait for Database to initialize
@@ -46,4 +46,4 @@ jobs:
       # 8. Clean up after the test is done
       - name: Shut down Docker containers
         if: always()
-        run: docker-compose down -v
+        run: docker compose down -v
