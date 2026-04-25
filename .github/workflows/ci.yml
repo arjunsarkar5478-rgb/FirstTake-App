@@ -27,6 +27,15 @@ jobs:
           echo "MYSQL_ROOT_PASSWORD=root" >> .env
           echo "MYSQL_DATABASE=firsttake" >> .env
 
+        # 3.5 PREVENT DOCKER CRASH: Install Node packages on the robot
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          
+      - name: Install dependencies locally
+        run: npm install
+
       # 4. Boot up the Docker containers in the background
       - name: Build and start Docker containers
         run: docker compose up -d --build
