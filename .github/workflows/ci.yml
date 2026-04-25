@@ -33,11 +33,15 @@ jobs:
 
       # 5. Wait 15 seconds to give MySQL time to boot up and run the .sql file
       - name: Wait for Database to initialize
-        run: sleep 15
+        run: sleep 25
 
       # 6. Test 1: Are the containers actually running, or did they crash?
       - name: Check running containers
         run: docker ps
+
+        # 👉 NEW STEP: Print the server logs so we can see exactly why it crashed!
+      - name: Print Server Crash Logs
+        run: docker compose logs
 
       # 7. Test 2: Ping the Express server to see if it responds with a 200 OK status
       - name: Ping the Web Server
