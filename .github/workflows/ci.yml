@@ -31,9 +31,9 @@ jobs:
       - name: Build and start Docker containers
         run: docker compose up -d --build
 
-      # 5. Wait 15 seconds to give MySQL time to boot up and run the .sql file
+      # 5. Wait 20 seconds to give MySQL time to boot up and run the .sql file
       - name: Wait for Database to initialize
-        run: sleep 15
+        run: sleep 20
 
       # 6. Test 1: Are the containers actually running, or did they crash?
       - name: Check running containers
