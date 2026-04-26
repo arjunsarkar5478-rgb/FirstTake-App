@@ -2,6 +2,8 @@ name: FirstTake CI/CD Guard
 
 # 1. When should this robot run?
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -25,17 +27,30 @@ jobs:
           echo "MYSQL_ROOT_PASSWORD=root" >> .env
           echo "MYSQL_DATABASE=firsttake" >> .env
 
+        # 3.5 PREVENT DOCKER CRASH: Install Node packages on the robot
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          
+      - name: Install dependencies locally
+        run: npm install
+
       # 4. Boot up the Docker containers in the background
       - name: Build and start Docker containers
-        run: docker-compose up -d --build
+        run: docker compose up -d --build
 
-      # 5. Wait 15 seconds to give MySQL time to boot up and run the .sql file
+      # 5. Wait 20 seconds to give MySQL time to boot up and run the .sql file
       - name: Wait for Database to initialize
-        run: sleep 15
+        run: sleep 20
 
       # 6. Test 1: Are the containers actually running, or did they crash?
       - name: Check running containers
         run: docker ps
+
+        # 👉 NEW STEP: Print the server logs so we can see exactly why it crashed!
+      - name: Print Server Crash Logs
+        run: docker compose logs
 
       # 7. Test 2: Ping the Express server to see if it responds with a 200 OK status
       - name: Ping the Web Server
@@ -44,4 +59,4 @@ jobs:
       # 8. Clean up after the test is done
       - name: Shut down Docker containers
         if: always()
-        run: docker-compose down -v
+        run: docker compose down -v
