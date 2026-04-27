@@ -45,14 +45,23 @@ html(lang="en")
                 h4(style="margin: 0 0 10px 0; color: #38bdf8; font-size: 1.2rem;") #{role.role_title}
                 p(style="margin: 0; color: #cbd5e1; line-height: 1.5;") #{role.role_requirements}
               
-              //- The Apply Section on the Right (Counter + Button)
+              //- START OF APPLY SECTION
               div(style="display: flex; align-items: center; gap: 15px;")
                 
-                //- THE NEW APPLICANT COUNTER! (Capped at 5)
+                //- Applicant Counter (Added || 0 just in case it's empty!)
                 div(style="text-align: right;")
-                  span(style="color: #94a3b8; font-size: 0.9rem; font-weight: bold;") 👥 #{role.requirement_id ? ((role.requirement_id % 5) + 1) : 3} / 5 Applied
+                  span(style="color: #94a3b8; font-size: 0.9rem; font-weight: bold;") 👥 #{role.applicant_count || 0} / 5 Applied
                 
-                button.btn-primary(style="padding: 10px 25px; font-size: 0.95rem; cursor: pointer;" onclick=`alert('Success! Your profile has been sent to the director for the ${role.role_title} role.')`) Apply Now
+                //- CHECK IF THEY ALREADY APPLIED
+                if appliedOpeningIds && appliedOpeningIds.includes(role.opening_id)
+                  //- Show greyed-out Disabled button
+                  button(disabled style="background-color: #475569; color: #94a3b8; cursor: not-allowed; padding: 10px 25px; font-size: 0.95rem; border-radius: 5px; border: none; font-weight: bold;") Applied
+                else
+                  //- Show the normal Apply Form
+                  form(action="/apply" method="POST" style="margin: 0;")
+                    input(type="hidden" name="opening_id" value=role.opening_id)
+                    button.btn-primary(type="submit" style="padding: 10px 25px; font-size: 0.95rem; cursor: pointer;") Apply Now
+
       else
         .glass-card(style="text-align: center; padding: 30px;")
           p(style="color: #94a3b8; margin: 0;") No specific roles listed for this project yet.

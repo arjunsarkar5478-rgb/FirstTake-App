@@ -79,6 +79,8 @@ app.post('/publish-project', requireAuth, projectController.createProject);
 app.get('/verify-otp', userController.getVerifyOtp);
 app.post('/verify-otp', userController.postVerifyOtp);
 
+app.post('/apply', requireAuth, projectController.postApply);
+
 app.listen(3000, '0.0.0.0', function(){
     console.log(`FirstTake server running at http://localhost:3000/`);
 });

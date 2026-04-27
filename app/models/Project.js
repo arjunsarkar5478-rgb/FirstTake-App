@@ -41,7 +41,17 @@ class Project {
       rows[0].project_id, rows[0].owner_user_id, rows[0].title, rows[0].genre, rows[0].location, rows[0].description, rows[0].director
     );
 
-    const roleSql = `SELECT * FROM project_requirement WHERE project_id = ?`;
+    // --- THE FIX IS HERE ---
+    // We JOIN the two tables so we can get both the requirement details AND the opening_id
+   // We add a COUNT() and JOIN the application table to get real numbers!
+    const roleSql = `
+      SELECT pr.*, pro.opening_id, COUNT(a.application_id) AS applicant_count
+      FROM project_requirement pr
+      LEFT JOIN project_role_opening pro ON pr.requirement_id = pro.role_id
+      LEFT JOIN application a ON pro.opening_id = a.opening_id
+      WHERE pr.project_id = ?
+      GROUP BY pr.requirement_id, pro.opening_id
+    `;
     proj.roles = await db.query(roleSql, [id]);
 
     return proj;
@@ -64,9 +74,20 @@ class Project {
     if (projectData.roles) {
       const rolesArray = Array.isArray(projectData.roles) ? projectData.roles : Object.values(projectData.roles);
       const roleSql = "INSERT INTO project_requirement (project_id, role_title, role_requirements) VALUES (?, ?, ?)";
+      
       for (let role of rolesArray) {
         if (role.title && role.title.trim() !== "") {
-          await db.query(roleSql, [newId, role.title, role.requirements]);
+          // 1. Insert the Requirement
+          const reqResult = await db.query(roleSql, [newId, role.title, role.requirements]);
+          
+          // 2. Grab the new Requirement ID so we can link it
+          const newReqId = reqResult.insertId || (reqResult[0] ? reqResult[0].insertId : null);
+
+          // 3. THE FIX: Open the Role! 
+          if (newReqId) {
+            const openingSql = "INSERT INTO project_role_opening (project_id, role_id, role_title, opening_status) VALUES (?, ?, ?, 'OPEN')";
+            await db.query(openingSql, [newId, newReqId, role.title]);
+          }
         }
       }
     }
