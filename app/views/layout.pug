@@ -27,3 +27,72 @@ html(lang="en")
     
     main(style="padding: 20px;")
       block content
+
+    footer.site-footer
+      span FirstTake
+      span.footer-divider |
+      button.footer-link(onclick="openPolicy('gdpr')") GDPR Privacy Policy
+      span.footer-divider |
+      button.footer-link(onclick="openPolicy('safestart')") Safe-Start Guidelines
+
+    //- Policy Modal
+    #policy-modal.policy-modal-overlay(onclick="closePolicy(event)")
+      .policy-modal-box
+        button.policy-close(onclick="document.getElementById('policy-modal').style.display='none'") ✕
+        #policy-content
+
+    script.
+      const policies = {
+        gdpr: {
+          title: 'GDPR Privacy Policy',
+          content: `
+            <h3>Data Collection and Usage</h3>
+            <p>FirstTake is committed to protecting personal privacy. The platform collects essential information, including names, contact details, profile images, and professional portfolios. This data is utilized strictly for the purpose of connecting talent with relevant casting opportunities and managing project applications.</p>
+
+            <h3>Data Security</h3>
+            <p>All personal information is encrypted and stored securely. Account details and application data are never sold to third parties or used for external marketing without explicit consent.</p>
+
+            <h3>User Rights</h3>
+            <p>Under the General Data Protection Regulation (GDPR), users retain full control over their data. Individuals have the right to:</p>
+            <ul>
+              <li>Access a copy of all personal data stored on the platform.</li>
+              <li>Edit or update profile information at any time.</li>
+              <li>Request the complete deletion of their account and associated data (Right to be Forgotten).</li>
+            </ul>
+            <p>To exercise any of these rights, or for questions regarding data management, please contact the platform's data protection officer.</p>
+          `
+        },
+        safestart: {
+          title: 'Safe-Start Guidelines',
+          content: `
+            <p>Safety is the highest priority for all physical and virtual auditions arranged through FirstTake. All participants are expected to adhere to the following safety protocols:</p>
+
+            <h3>1. Public Venues for Initial Meetings</h3>
+            <p>Always arrange first-time meetings, interviews, or casual auditions in well-lit, public spaces such as coffee shops, rented studio spaces, or public libraries. Never agree to meet at a private residence for an initial introduction.</p>
+
+            <h3>2. Verify Identities</h3>
+            <p>Before attending an audition, research the production company or director. Request links to previous work, a professional website, or verify their identity through established industry networks.</p>
+
+            <h3>3. Bring Accompaniment</h3>
+            <p>Actors are highly encouraged to bring a trusted friend, family member, or talent representative to all first-time, in-person meetings.</p>
+
+            <h3>4. Protect Personal Information</h3>
+            <p>Limit the sharing of highly sensitive personal information. Do not provide banking details, home addresses, or social security numbers until an official, verified contract is offered.</p>
+
+            <h3>5. Trust Instincts and Report</h3>
+            <p>If a situation, message, or audition environment feels unsafe or unprofessional, leave immediately. Please report any suspicious activity, inappropriate behavior, or fake projects directly to the platform administrators so protective action can be taken.</p>
+          `
+        }
+      };
+
+      function openPolicy(key) {
+        const policy = policies[key];
+        document.getElementById('policy-content').innerHTML = '<h2>' + policy.title + '</h2>' + policy.content;
+        document.getElementById('policy-modal').style.display = 'flex';
+      }
+
+      function closePolicy(event) {
+        if (event.target === document.getElementById('policy-modal')) {
+          document.getElementById('policy-modal').style.display = 'none';
+        }
+      }

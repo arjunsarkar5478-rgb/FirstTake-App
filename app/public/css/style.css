@@ -419,6 +419,112 @@ body {
     color: #0F172A;
 }
 
+/* --- FOOTER --- */
+.site-footer {
+    text-align: center;
+    margin-top: 60px;
+    padding: 20px;
+    color: #94A3B8;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    background: rgba(30, 41, 59, 0.4);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+}
+
+.footer-divider {
+    color: #334155;
+}
+
+.footer-link {
+    background: none;
+    border: none;
+    color: #94A3B8;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.footer-link:hover {
+    color: #38BDF8;
+}
+
+/* --- POLICY MODAL --- */
+.policy-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.policy-modal-box {
+    background: #1E293B;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 40px;
+    max-width: 680px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+}
+
+.policy-modal-box h2 {
+    color: #F8FAFC;
+    font-size: 1.6rem;
+    margin-bottom: 24px;
+    padding-right: 30px;
+}
+
+.policy-modal-box h3 {
+    color: #38BDF8;
+    font-size: 1rem;
+    margin: 22px 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.policy-modal-box p {
+    color: #CBD5E1;
+    line-height: 1.7;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+}
+
+.policy-modal-box ul {
+    color: #CBD5E1;
+    padding-left: 20px;
+    line-height: 1.9;
+    font-size: 0.95rem;
+}
+
+.policy-close {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: #64748B;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.policy-close:hover {
+    color: #F8FAFC;
+}
+
 .btn-disabled {
     background-color: transparent;
     border: 1px solid #475569;
