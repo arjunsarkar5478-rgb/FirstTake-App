@@ -6,12 +6,24 @@ html(lang="en")
     link(rel="stylesheet", href="/css/style.css")
     title FirstTake
   body
-    header.glass-card
-      h2 FirstTake Dashboard
+    //- Added flexbox styling to properly separate the logo and the navigation links
+    header.glass-card(style="display: flex; justify-content: space-between; align-items: center; padding: 15px 30px;")
+      h2(style="margin: 0;") FirstTake Dashboard
+      
       nav
-        a(href="/projects" style="margin-right:15px; color:#38BDF8;") Feed
-        a(href="/talents" style="margin-right:15px; color:#38BDF8;") Users
-        a(href="/profile" style="color:#38BDF8;") My Profile
+        //- Standard links visible to everyone
+        a(href="/projects" style="margin-right:15px; color:#38BDF8; text-decoration: none;") Feed
+        a(href="/talents" style="margin-right:15px; color:#38BDF8; text-decoration: none;") Users
+        
+        //- Conditional Rendering based on Authentication State
+        if loggedIn
+          //- Displayed ONLY when a user is actively logged in
+          a(href="/my-profile" style="margin-right:15px; color:#38BDF8; text-decoration: none;") My Profile
+          a(href="/logout" style="color:#EF4444; font-weight: bold; text-decoration: none;") Logout
+        else
+          //- Displayed ONLY for guests
+          a(href="/login" style="margin-right:15px; color:#F8FAFC; text-decoration: none;") Login
+          a(href="/register" style="color:#38BDF8; font-weight: bold; text-decoration: none;") Register
     
-    main
+    main(style="padding: 20px;")
       block content

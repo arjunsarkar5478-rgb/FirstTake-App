@@ -1,0 +1,29 @@
+extends layout
+
+block content
+  //- Include the isolated CSS just for this page
+  link(rel='stylesheet', href='/auth.css')
+  
+  .auth-wrapper
+    div.auth-ambient-orb.auth-orb-cyan
+    div.auth-ambient-orb.auth-orb-violet
+    
+    .auth-container
+      h1 Welcome Back
+      hr
+      
+      form(action="/login" method="POST")
+        div.auth-group
+          label(for="email") Email Address:
+          input(type="email" name="email" placeholder="e.g., alex@email.com" required)
+        
+        div.auth-group
+          label(for="password") Password:
+          input(type="password" name="password" placeholder="********" required)
+        
+        button.auth-btn(type="submit") SECURE LOGIN
+        
+      div(style="text-align: center; margin-top: 20px;")
+        a(href="/forgot-password" style="display: block; margin-bottom: 10px;") Forgot Password?
+        span Don't have an account? 
+        a(href="/register") Register

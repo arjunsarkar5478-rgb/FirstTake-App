@@ -1,0 +1,65 @@
+extends layout
+
+block content
+  link(rel='stylesheet', href='/profile.css')
+  link(rel='stylesheet', href='/auth.css') 
+
+  .profile-wrapper
+    div.auth-ambient-orb.auth-orb-cyan
+    div.auth-ambient-orb.auth-orb-violet
+
+    .profile-container
+      .profile-nav
+        a.back-link(href="/") &larr; Home
+        //- The Edit button now points to our new route!
+        a.btn-outline(href="/edit-profile" style="text-decoration: none;") Edit Profile
+
+      h1.page-title My Profile
+
+      .glass-card.profile-card
+        //- Removed padding and added overflow hidden so the image fits perfectly inside the circle
+        .avatar-placeholder(style="overflow: hidden; padding: 0;")
+          if user.profile_picture
+            img(src=user.profile_picture alt="Profile" style="width: 100%; height: 100%; object-fit: cover;")
+          else
+            span(style="font-size: 40px; font-weight: bold;") #{user.full_name.charAt(0)}
+            
+        .profile-info
+          //- Dynamically load your real name!
+          h2= user.full_name
+          p 
+            strong Primary Roles: 
+            | #{user.roles || 'No roles selected'}
+          p 
+            strong Location: 
+            | #{user.location || 'Location not set'}
+
+      .section-title About Me
+      .glass-card
+        if user.bio
+          p= user.bio
+        else
+          p(style="color: rgba(255,255,255,0.5); font-style: italic;") You haven't written a bio yet. Click Edit Profile to add one!
+
+      .section-title Links & Portfolio
+      .glass-card
+        ul.portfolio-list
+          if user.primary_link
+            li
+              span 🔗 
+              strong Primary Link: 
+              a(href=user.primary_link target="_blank") View External Profile
+          if user.secondary_link
+            li
+              span 🔗 
+              strong Secondary Link: 
+              a(href=user.secondary_link target="_blank") View External Profile
+          
+          if !user.primary_link && !user.secondary_link
+            li(style="color: rgba(255,255,255,0.5); font-style: italic;") No links added yet.
+
+      .section-title Past Collaborations
+      .glass-card
+        p(style="color: rgba(255,255,255,0.5); font-style: italic;") You haven't completed any projects on FirstTake yet.
+
+      a.btn-danger(href="/logout") LOGOUT

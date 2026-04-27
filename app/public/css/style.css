@@ -429,3 +429,376 @@ body {
     cursor: not-allowed;
     text-transform: uppercase;
 }
+
+/* --- Only applies to the auth page background --- */
+.auth-wrapper {
+    background-color: #0B0F19; /* Deep spatial black */
+    color: #F8FAFC; 
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+    /* This overrides any padding/margins from your main layout for this specific section */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999; 
+}
+
+/* --- Animated Ambient Light Orbs --- */
+.auth-ambient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px); 
+    z-index: 0; 
+    animation: auth-float 12s infinite alternate ease-in-out;
+}
+
+.auth-orb-cyan {
+    width: 350px;
+    height: 350px;
+    background: #00E5FF; 
+    top: 10%;
+    left: 15%;
+    opacity: 0.35;
+}
+
+.auth-orb-violet {
+    width: 450px;
+    height: 450px;
+    background: #7C3AED; 
+    bottom: 5%;
+    right: 15%;
+    opacity: 0.35;
+    animation-direction: alternate-reverse;
+}
+
+@keyframes auth-float {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(60px, -40px) scale(1.1); }
+}
+
+/* --- Frosted Glass Cards --- */
+.auth-container {
+    background: rgba(30, 41, 59, 0.5); 
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 40px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 450px;
+    box-sizing: border-box;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    z-index: 1; /* Keeps form above the orbs */
+    position: relative;
+}
+
+.auth-container:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+}
+
+/* --- Text & Dividers --- */
+.auth-container h1 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.auth-container hr {
+    border: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin-bottom: 25px;
+}
+
+/* --- Form Inputs --- */
+.auth-group {
+    margin-bottom: 20px;
+}
+
+.auth-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #F8FAFC;
+    opacity: 0.9;
+}
+
+.auth-group input[type="text"],
+.auth-group input[type="email"],
+.auth-group input[type="password"],
+.auth-group input[type="tel"] {
+    width: 100%;
+    padding: 14px;
+    background: rgba(11, 15, 25, 0.6); 
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 15px;
+    color: #F8FAFC;
+    transition: all 0.3s ease;
+}
+
+.auth-group input::placeholder { color: rgba(248, 250, 252, 0.3); }
+.auth-group input:focus {
+    outline: none;
+    border-color: #38BDF8; 
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+}
+
+/* --- Buttons --- */
+.auth-btn {
+    background-color: #38BDF8; 
+    color: #0B0F19; 
+    border: none;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 800;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.auth-btn:hover {
+    background-color: #00E5FF; 
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 229, 255, 0.3);
+}
+
+/* --- Links & Secondary Buttons --- */
+.auth-container a {
+    color: #38BDF8;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.auth-container a:hover {
+    color: #00E5FF;
+    text-decoration: underline;
+}
+
+.auth-btn-secondary {
+    background-color: transparent;
+    color: #F8FAFC;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 48%;
+}
+.auth-btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    box-shadow: none;
+}
+
+/* --- GDPR & Checkboxes --- */
+.auth-gdpr-box {
+    background: rgba(11, 15, 25, 0.4);
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.auth-checkbox-group div { margin-bottom: 12px; }
+.auth-checkbox-group input[type="checkbox"],
+.auth-gdpr-box input[type="checkbox"] {
+    accent-color: #38BDF8;
+    transform: scale(1.2);
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+/* --- Profile Dashboard Layout --- */
+.profile-wrapper {
+    background-color: #0B0F19; /* Deep spatial black */
+    color: #F8FAFC; 
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    padding: 40px 20px;
+    position: relative;
+    overflow-x: hidden;
+    z-index: 1;
+}
+
+.profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+}
+
+/* --- Top Navigation --- */
+.profile-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.back-link {
+    color: #F8FAFC;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.back-link:hover { color: #38BDF8; }
+
+.page-title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 40px;
+}
+
+/* --- Frosted Glass Cards --- */
+.glass-card {
+    background: rgba(30, 41, 59, 0.5); 
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #38BDF8;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+/* --- Profile Header Layout --- */
+.profile-card {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.avatar-placeholder {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.profile-info h2 {
+    font-size: 28px;
+    margin: 0 0 10px 0;
+}
+
+.profile-info p { margin: 5px 0; font-size: 15px; }
+.profile-info strong { color: #38BDF8; }
+
+/* --- Lists & Details --- */
+.portfolio-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+}
+
+.portfolio-list li { margin-bottom: 12px; font-size: 15px; }
+.portfolio-list a { color: #F8FAFC; text-decoration: underline; margin-left: 5px; }
+.portfolio-list a:hover { color: #38BDF8; }
+
+.collab-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.collab-header h3 { margin: 0; font-size: 18px; }
+.stars { color: #FBBF24; letter-spacing: 2px; margin-left: 5px;}
+
+/* --- Buttons --- */
+.btn-outline {
+    background: transparent;
+    border: 1px solid #F8FAFC;
+    color: #F8FAFC;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.btn-outline:hover { background: rgba(255, 255, 255, 0.1); }
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #F8FAFC;
+    padding: 10px 20px;
+    border-radius: 6px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+.btn-secondary:hover { background: #38BDF8; color: #0B0F19; border-color: #38BDF8; }
+
+.btn-dashed {
+    background: transparent;
+    border: 1px dashed rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.8);
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+}
+.btn-dashed:hover { border-color: #38BDF8; color: #38BDF8; }
+
+.btn-danger {
+    background: transparent;
+    border: 1px solid #EF4444; /* Red for logout */
+    color: #EF4444;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 40px;
+    transition: all 0.2s;
+}
+.btn-danger:hover { background: #EF4444; color: #fff; }
+
+/* --- OVERRIDE BROWSER AUTOFILL COLORS --- */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+    /* This creates a 5000-second delay on the background color changing, effectively freezing your dark background in place */
+    transition: background-color 5000s ease-in-out 0s !important;
+    
+    /* This forces the auto-filled text to stay white instead of turning black */
+    -webkit-text-fill-color: #F8FAFC !important;
+}

@@ -1,0 +1,80 @@
+extends layout
+
+block content
+  //- Include the isolated CSS just for this page
+  link(rel='stylesheet', href='/auth.css')
+
+  .auth-wrapper
+    div.auth-ambient-orb.auth-orb-cyan
+    div.auth-ambient-orb.auth-orb-violet
+    
+    .auth-container
+      form(action="/register" method="POST" id="registerForm")
+        
+        //- STEP 1: Account Details
+        #step1
+          h1 Create Account
+          hr
+          
+          div.auth-group
+            label(for="full_name") Full Name:
+            input(type="text" name="full_name" placeholder="e.g., Olivia" required)
+            
+          div.auth-group
+            label(for="email") Email Address:
+            input(type="email" name="email" placeholder="name@email.com" required)
+            
+          div.auth-group
+            label(for="password") Password:
+            input(type="password" name="password" placeholder="********" required)
+            
+          div.auth-group
+            label(for="confirmPassword") Confirm Password:
+            input(type="password" name="confirmPassword" placeholder="********" required)
+            
+          div.auth-group
+            label(for="phone") Phone Number:
+            input(type="tel" name="phone" placeholder="+44 7000 000000" required)
+            
+          button.auth-btn(type="button" onclick="nextStep()") NEXT &rarr;
+
+        //- STEP 2: Roles and GDPR
+        #step2(style="display: none;")
+          h1 Select Your Roles
+          hr
+          
+          p(style="margin-bottom: 15px;") I am a: (Select all that apply)
+          div.auth-checkbox-group
+            div
+              input(type="checkbox" name="roles" value="Director" id="role-director")
+              label(for="role-director") Director
+            div
+              input(type="checkbox" name="roles" value="Actor" id="role-actor")
+              label(for="role-actor") Actor / Talent
+            div
+              input(type="checkbox" name="roles" value="Cinematographer" id="role-cinema")
+              label(for="role-cinema") Cinematographer
+            div
+              input(type="checkbox" name="roles" value="Editor" id="role-editor")
+              label(for="role-editor") Editor
+            div
+              input(type="checkbox" name="roles" value="SoundEngineer" id="role-sound")
+              label(for="role-sound") Other
+              
+          div.auth-gdpr-box
+            input(type="checkbox" name="gdprConsent" id="gdpr" required)
+            label(for="gdpr") I agree to Terms & Privacy Policy (GDPR) [cite: 128, 129]
+            
+          div(style="display: flex; justify-content: space-between; gap: 10px; margin-top: 15px;")
+            button.auth-btn.auth-btn-secondary(type="button" onclick="prevStep()") &larr; BACK
+            button.auth-btn(type="submit" style="margin-top: 0; width: 48%;") CREATE
+
+      script.
+        function nextStep() {
+          document.getElementById('step1').style.display = 'none';
+          document.getElementById('step2').style.display = 'block';
+        }
+        function prevStep() {
+          document.getElementById('step2').style.display = 'none';
+          document.getElementById('step1').style.display = 'block';
+        }

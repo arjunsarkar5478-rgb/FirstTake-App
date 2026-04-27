@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: firsttake-mysql:3306
--- Generation Time: Apr 22, 2026 at 12:13 AM
+-- Generation Time: Apr 26, 2026 at 12:07 PM
 -- Server version: 8.4.8
 -- PHP Version: 8.3.26
 
@@ -265,24 +265,31 @@ CREATE TABLE `users` (
   `user_id` bigint NOT NULL,
   `full_name` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
-  `password_hash` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
   `phone_number` varchar(20) DEFAULT NULL,
   `phone_revealed_default` tinyint(1) DEFAULT '0',
   `bio` text,
   `profile_photo_url` varchar(255) DEFAULT NULL,
   `account_status` enum('ACTIVE','SUSPENDED','FLAGGED') DEFAULT 'ACTIVE',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `roles` varchar(255) DEFAULT NULL,
+  `gdpr_consent` tinyint(1) DEFAULT '1',
+  `location` varchar(255) DEFAULT NULL,
+  `primary_link` varchar(255) DEFAULT NULL,
+  `secondary_link` varchar(255) DEFAULT NULL,
+  `profile_picture` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `full_name`, `email`, `password_hash`, `phone_number`, `phone_revealed_default`, `bio`, `profile_photo_url`, `account_status`, `created_at`, `updated_at`) VALUES
-(1, 'Alex', NULL, NULL, NULL, 0, 'Indie horror director based in London.', NULL, 'ACTIVE', '2026-03-23 18:37:27', '2026-03-23 18:37:27'),
-(2, 'Sarah', NULL, NULL, NULL, 0, 'Student filmmaker focusing on drama.', NULL, 'ACTIVE', '2026-03-23 18:37:27', '2026-03-23 18:37:27'),
-(3, 'Marcus', NULL, NULL, NULL, 0, 'Sci-Fi enthusiast and VFX artist.', NULL, 'ACTIVE', '2026-03-23 18:37:27', '2026-03-23 18:37:27');
+INSERT INTO `users` (`user_id`, `full_name`, `email`, `password`, `phone`, `phone_revealed_default`, `bio`, `profile_photo_url`, `account_status`, `created_at`, `updated_at`, `roles`, `gdpr_consent`, `location`, `primary_link`, `secondary_link`, `profile_picture`) VALUES
+(1, 'Alex', NULL, NULL, NULL, 0, 'Indie horror director based in London.', NULL, 'ACTIVE', '2026-03-23 18:37:27', '2026-03-23 18:37:27', NULL, 1, NULL, NULL, NULL, NULL),
+(2, 'Sarah', NULL, NULL, NULL, 0, 'Student filmmaker focusing on drama.', NULL, 'ACTIVE', '2026-03-23 18:37:27', '2026-03-23 18:37:27', NULL, 1, NULL, NULL, NULL, NULL),
+(3, 'Marcus', NULL, NULL, NULL, 0, 'Sci-Fi enthusiast and VFX artist.', NULL, 'ACTIVE', '2026-03-23 18:37:27', '2026-03-23 18:37:27', NULL, 1, NULL, NULL, NULL, NULL),
+(4, 'Arjun Sarkar', 'arjunsarkar5478@gmail.com', '$2b$10$ZXZLoL9OLv5IZDn7sEXEUu7qTJqY60H8mxiLzRmov67VYvx.CMdCm', NULL, 0, 'I am an actor', NULL, 'ACTIVE', '2026-04-26 00:10:50', '2026-04-26 10:01:32', 'Director, Actor, Cinematographer', 1, 'London, Uk', 'https://www.instagram.com/sarkar54540/', 'https://www.facebook.com/?locale=en_GB', NULL);
 
 -- --------------------------------------------------------
 
@@ -507,7 +514,7 @@ ALTER TABLE `safe_zone`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `user_id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables

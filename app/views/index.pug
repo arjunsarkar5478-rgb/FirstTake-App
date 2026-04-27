@@ -18,8 +18,13 @@ html(lang="en")
       nav.landing-nav
         a(href="/projects") Feed
         a(href="#how-it-works") How it Works
-        a(href="#login") Login
-        a.btn-primary(href="#register") Register
+        //- Add the dynamic logic here!
+        if loggedIn
+           a(href="/my-profile" style="color: #38BDF8; font-weight: bold;") My Profile
+           a(href="/logout" style="color: #EF4444;") Logout
+        else
+           a(href="/login") Login
+           a.btn-primary(href="/register") Register
 
     main
       //- Hero Section
