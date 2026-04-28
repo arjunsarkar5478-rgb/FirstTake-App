@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const Project = require('../models/Project');
+const db = require('../services/db');
 
 const getTalentsFeed = async (req, res) => {
     try {
@@ -161,28 +162,93 @@ const getEditProfile = async (req, res) => {
     }
 };
 
-// Process the Edit Profile form
+// Process the Edit Profile form (MERGED VERSION)
 const postEditProfile = async (req, res) => {
-        console.log("--- DEBUG UPLOAD ---");
-        console.log("FILE RECEIVED:", req.file);
+    console.log("--- DEBUG UPLOAD ---");
+    console.log("FILE RECEIVED:", req.file);
+    
     try {
-        const { bio, location, primary_link, secondary_link } = req.body;
+        const userId = req.session.uid;
+        // 1. Grab EVERY piece of data from the form (including phone_number!)
+        const { bio, location, primary_link, secondary_link, phone_number } = req.body;
         
-        // 1. Update standard text fields
-        await User.updateProfile(req.session.uid, bio, location, primary_link, secondary_link);
+        // 2. Update the standard text fields using your existing Model
+        await User.updateProfile(userId, bio, location, primary_link, secondary_link);
         
-        // 2. Check if a file was uploaded and update the image path
-        if (req.file) {
-            const imagePath = '/uploads/' + req.file.filename;
-            await User.updateProfilePicture(req.session.uid, imagePath);
+        // 3. Update the new phone number directly to the database
+        if (phone_number !== undefined) {
+            const phoneSql = `UPDATE users SET phone = ? WHERE user_id = ?`;
+            await db.query(phoneSql, [phone_number, userId]);
         }
         
+        // 4. Check if a file was uploaded and update the image path
+        if (req.file) {
+            const imagePath = '/uploads/' + req.file.filename;
+            await User.updateProfilePicture(userId, imagePath);
+        }
+        
+        // 5. Success! Redirect back to the profile page
         res.redirect('/my-profile'); 
+        
     } catch (error) {
-        console.error(error);
+        console.error("Error updating profile:", error);
         res.status(500).send("Error updating profile");
     }
 };
+
+// Fetch a public profile AND their review stats for the Director to view
+const getPublicProfile = async (req, res) => {
+    try {
+        const requestedUserId = req.params.id;
+        console.log("--- DEBUG: Looking for User ID:", requestedUserId);
+
+        const userSql = `SELECT * FROM users WHERE user_id = ?`;
+        const result = await db.query(userSql, [requestedUserId]);
+
+        // This is the "Force Extract" - it handles every version of mysql2 result
+        let rows = result;
+        if (Array.isArray(result[0])) {
+            rows = result[0]; // Standard for mysql2
+        }
+
+        console.log("--- DEBUG: Database Rows Found:", rows.length);
+
+        if (!rows || rows.length === 0) {
+            // If we still can't find them, pass null so Pug shows the "Not Found" message
+            return res.render('public_profile', { profileUser: null, reviewStats: { total: 0, average: 0 } });
+        }
+
+        const profileUser = rows[0];
+
+        // --- Review Math ---
+        const reviewSql = `
+            SELECT 
+                COUNT(review_id) as total_reviews,
+                AVG((punctuality_rating + behavior_rating + skill_rating) / 3) as overall_average
+            FROM review 
+            WHERE reviewee_user_id = ?
+        `;
+        const reviewResult = await db.query(reviewSql, [requestedUserId]);
+        let reviewRows = Array.isArray(reviewResult[0]) ? reviewResult[0] : reviewResult;
+        
+        let reviewStats = { total: 0, average: 0 };
+        if (reviewRows && reviewRows[0] && reviewRows[0].total_reviews > 0) {
+            reviewStats.total = reviewRows[0].total_reviews;
+            reviewStats.average = Number(reviewRows[0].overall_average).toFixed(1);
+        }
+
+        // Render the page
+        res.render('public_profile', { 
+            profileUser: profileUser, 
+            reviewStats: reviewStats 
+        });
+        
+    } catch (error) {
+        console.error("CRITICAL ERROR in getPublicProfile:", error);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
 
 // Export EVERYTHING so app.js can use it
 module.exports = {
@@ -198,6 +264,7 @@ module.exports = {
     postEditProfile,
     postRegister,
     getVerifyOtp,
-    postVerifyOtp
+    postVerifyOtp,
+    getPublicProfile
 
 };

@@ -34,6 +34,12 @@ block content
             strong Location: 
             | #{user.location || 'Location not set'}
 
+          //- FIX: Backspaced this to align with the 'p' tags above it!
+          if user.phone
+            p(style="margin: 5px 0 0 0; color: #cbd5e1; font-size: 0.9rem;") 
+              strong(style="color: #488fe5;") Phone Number: 
+              | #{user.phone}
+
       .section-title About Me
       .glass-card
         if user.bio

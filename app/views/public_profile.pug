@@ -1,0 +1,67 @@
+extends layout
+
+block content
+  //- Link your profile.css
+  link(rel='stylesheet', href='/css/profile.css')
+
+  .profile-wrapper(style="padding-top: 40px;")
+    .profile-container(style="max-width: 800px; margin: 0 auto;")
+      
+      //- Back button
+      .profile-nav(style="margin-bottom: 20px;")
+        a.back-link(href="#" onclick="history.back();" style="color: #38bdf8; text-decoration: none;") &larr; Back to Applicants
+
+      .glass-card(style="padding: 40px; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px;")
+        
+        if profileUser
+          //- Top Section: Avatar & Contact Info
+          div(style="display: flex; align-items: center; gap: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 30px; margin-bottom: 30px;")
+            
+            //- Profile Picture or Initial
+            div(style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; background: #38bdf8; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: bold; color: #0f172a;")
+              if profileUser.profile_picture
+                img(src=profileUser.profile_picture alt="Profile" style="width: 100%; height: 100%; object-fit: cover;")
+              else
+                | #{profileUser.full_name.charAt(0)}
+                
+            div
+              h1(style="margin: 0 0 10px 0; font-size: 2.2rem; color: #F8FAFC;") #{profileUser.full_name}
+              
+              //- ⭐️ THE TRUST BADGE ⭐️
+              if reviewStats && reviewStats.total > 0
+                div(style="display: inline-block; background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; padding: 5px 15px; border-radius: 20px; margin-bottom: 15px;")
+                  span(style="color: #f59e0b; font-weight: bold; font-size: 1.1rem;") ⭐️ #{reviewStats.average} / 5.0
+                  span(style="color: #cbd5e1; font-size: 0.9rem; margin-left: 8px;") (#{reviewStats.total} Reviews)
+              else
+                div(style="display: inline-block; background: rgba(255, 255, 255, 0.05); padding: 5px 15px; border-radius: 20px; margin-bottom: 15px;")
+                  span(style="color: #94a3b8; font-size: 0.9rem; font-style: italic;") No reviews yet
+
+              p(style="margin: 0; color: #cbd5e1; font-size: 1.1rem;") ✉️ #{profileUser.email}
+              
+              if profileUser.phone
+                p(style="margin: 8px 0 0 0; color: #cbd5e1; font-size: 1.1rem;") 📞 #{profileUser.phone}
+              
+              if profileUser.location
+                p(style="margin: 8px 0 0 0; color: #cbd5e1; font-size: 1.1rem;") 📍 #{profileUser.location}
+
+          //- Middle Section: Bio
+          h3(style="margin: 0 0 15px 0; font-size: 1.4rem; color: #38bdf8;") About Me
+          p(style="line-height: 1.6; color: #cbd5e1; margin-bottom: 30px; font-size: 1.05rem;") #{profileUser.bio || "This user hasn't added a bio yet."}
+
+          //- Bottom Section: Links & Portfolio
+          h3(style="margin: 0 0 15px 0; font-size: 1.4rem; color: #38bdf8;") Media & Links
+          if profileUser.primary_link || profileUser.secondary_link
+            div(style="display: flex; gap: 15px; flex-wrap: wrap;")
+              if profileUser.primary_link
+                a(href=profileUser.primary_link target="_blank" style="display: inline-block; background: #10b981; color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold;") 🎬 View Primary Portfolio
+              if profileUser.secondary_link
+                a(href=profileUser.secondary_link target="_blank" style="display: inline-block; background: rgba(255,255,255,0.1); color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none;") 🔗 Secondary Link
+          else
+            p(style="color: #94a3b8; font-style: italic;") No media links provided yet.
+        
+        else
+          //- Fallback if user doesn't exist
+          div(style="text-align: center; padding: 40px;")
+            h1(style="color: #F8FAFC;") User Not Found
+            p(style="color: #cbd5e1;") We couldn't find the profile for this applicant.
+            a.btn-primary(href="/projects" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: #38bdf8; color: #0f172a; text-decoration: none; border-radius: 5px; font-weight: bold;") Return to Projects

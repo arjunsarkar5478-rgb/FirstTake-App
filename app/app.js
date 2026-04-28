@@ -53,12 +53,15 @@ const upload = multer({ storage: storage });
 app.get("/", function(req, res) { res.render("index"); });
 
 app.get('/talents', userController.getTalentsFeed);
-app.get('/user/:id', userController.getUserProfile);
+app.get('/user/:id', userController.getPublicProfile);
 app.get('/projects', projectController.getProjectsFeed);
 app.get('/project/:id', projectController.getProjectDetails);
 
 app.get('/register', userController.getRegister);
 app.post('/register', userController.postRegister);
+app.post('/project/:id/complete', projectController.markProjectComplete);
+app.post('/reviews/add', projectController.submitReview);
+app.post('/hire-applicant', projectController.hireApplicant);
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout); // Logout route
@@ -70,6 +73,7 @@ app.get('/logout', userController.logout); // Logout route
 app.get('/my-profile', requireAuth, userController.getMyProfile);
 app.get('/edit-profile', requireAuth, userController.getEditProfile);
 
+
 // THE FIX: upload.single() is now intercepting the file right here!
 app.post('/edit-profile', requireAuth, upload.single('profile_picture'), userController.postEditProfile);
 
@@ -80,6 +84,7 @@ app.get('/verify-otp', userController.getVerifyOtp);
 app.post('/verify-otp', userController.postVerifyOtp);
 
 app.post('/apply', requireAuth, projectController.postApply);
+
 
 app.listen(3000, '0.0.0.0', function(){
     console.log(`FirstTake server running at http://localhost:3000/`);

@@ -20,6 +20,11 @@ block content
           div.auth-group
             label(for="profile_picture") Upload Profile Picture:
             input(type="file" name="profile_picture" accept="image/*" style="color: #F8FAFC; margin-bottom: 15px;")
+
+          //- THE FIX: Everything below here is now properly indented inside the form!
+          div(style="margin-bottom: 15px;")
+            label(for="phone_number" style="display: block; color: #38bdf8; margin-bottom: 5px;") Phone Number 
+            input(type="tel" name="phone_number" id="phone_number" value=user.phone placeholder="+44 7584 549876" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); color: white; border: 1px solid #334155; border-radius: 5px;")
           
           div.auth-group
             label(for="location") Location:

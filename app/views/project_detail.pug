@@ -5,6 +5,7 @@ html(lang="en")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     link(rel="stylesheet", href="/css/style.css")
     title FirstTake | #{project.title}
+  
   body.landing-body
     header.landing-header.glass-card
       div.logo-container
@@ -20,19 +21,23 @@ html(lang="en")
       div(style="margin-bottom: 20px;")
         a(href="/projects" style="color: #38bdf8; text-decoration: none;") ← Back to Feed
 
-      //- MAIN PROJECT INFO (From the `project` table)
+      //- -----------------------------------------
+      //- MAIN PROJECT INFO
+      //- -----------------------------------------
       .glass-card(style="margin-bottom: 40px; padding: 40px;")
         h1(style="margin: 0 0 15px 0; font-size: 2.5rem;") #{project.title}
 
         div(style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px; font-size: 0.95rem; color: #cbd5e1; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px;")
-          p(style="margin: 0;") 🎬 <strong>Director:</strong> <a href="/user/#{project.owner_user_id}" + project.owner_user_id style="color: #38bdf8; text-decoration: underline;">#{project.director || 'Anonymous'}</a>
+          p(style="margin: 0;") 🎬 <strong>Director:</strong> <a href="/user/#{project.owner_user_id}" style="color: #38bdf8; text-decoration: underline;">#{project.director || 'View Director'}</a>
           p(style="margin: 0;") 📍 <strong>Location:</strong> #{project.location || 'London, UK'}
           p(style="margin: 0;") 🏷️ <strong>Genre:</strong> <span class="genre-tag">#{project.genre}</span>
 
         h3(style="margin: 0 0 10px 0; font-size: 1.2rem;") Project Description
         p(style="line-height: 1.6; font-size: 1.05rem; margin: 0;") #{project.description}
 
+      //- -----------------------------------------
       //- ROLES REQUIRED SECTION
+      //- -----------------------------------------
       h2(style="margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;") Roles Required
 
       if roles && roles.length > 0
@@ -42,29 +47,105 @@ html(lang="en")
               
               //- The Role Info on the Left
               div(style="flex: 1; min-width: 250px;")
-                h4(style="margin: 0 0 10px 0; color: #38bdf8; font-size: 1.2rem;") #{role.role_title}
-                p(style="margin: 0; color: #cbd5e1; line-height: 1.5;") #{role.role_requirements}
+                h3(style="margin: 0 0 10px 0; color: #38bdf8; font-size: 1.2rem;") #{role.role_title}
+                p(style="margin: 0; color: #cbd5e1; line-height: 1.5;") #{role.role_description || role.role_requirements}
               
-              //- START OF APPLY SECTION
+              //- Apply Button Area on the Right
               div(style="display: flex; align-items: center; gap: 15px;")
-                
-                //- Applicant Counter (Added || 0 just in case it's empty!)
                 div(style="text-align: right;")
                   span(style="color: #94a3b8; font-size: 0.9rem; font-weight: bold;") 👥 #{role.applicant_count || 0} / 5 Applied
                 
-                //- CHECK IF THEY ALREADY APPLIED
+                //- POINT 1: "Applied" Button Check
                 if appliedOpeningIds && appliedOpeningIds.includes(role.opening_id)
-                  //- Show greyed-out Disabled button
-                  button(disabled style="background-color: #475569; color: #94a3b8; cursor: not-allowed; padding: 10px 25px; font-size: 0.95rem; border-radius: 5px; border: none; font-weight: bold;") Applied
+                  button(disabled style="background-color: #475569; color: #94a3b8; cursor: not-allowed; padding: 10px 25px; border-radius: 5px; border: none; font-weight: bold;") ✅ Applied
                 else
-                  //- Show the normal Apply Form
                   form(action="/apply" method="POST" style="margin: 0;")
                     input(type="hidden" name="opening_id" value=role.opening_id)
-                    button.btn-primary(type="submit" style="padding: 10px 25px; font-size: 0.95rem; cursor: pointer;") Apply Now
-
+                    button.btn-primary(type="submit" style="padding: 10px 25px; cursor: pointer;") Apply Now
       else
         .glass-card(style="text-align: center; padding: 30px;")
           p(style="color: #94a3b8; margin: 0;") No specific roles listed for this project yet.
 
-    footer.glass-card.landing-footer(style="margin-top: 50px;")
-      p FirstTake | GDPR Privacy Policy | Safe-Start Guidelines
+      //- -----------------------------------------
+      //- DIRECTOR'S MANAGEMENT PANEL
+      //- -----------------------------------------
+      if loggedInUserId == project.owner_user_id
+        
+        //- SMART VARIABLE: Checks for 'completed' regardless of uppercase/lowercase
+        - var isProjectCompleted = (project.status && project.status.toLowerCase() === 'completed')
+        
+        div(style="display: flex; justify-content: space-between; align-items: center; margin-top: 50px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;")
+          h2(style="margin: 0; color: #10b981;") 🎬 Project Management Panel
+          
+          if !isProjectCompleted
+            form(action=`/project/${project.project_id}/complete` method="POST" style="margin: 0;")
+              button(type="submit" style="background: #f59e0b; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer;") 🏁 Mark Project Completed
+          else
+            span(style="background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 5px 15px; border-radius: 20px; font-weight: bold;") ✅ Project Completed
+
+        if applicants && applicants.length > 0
+          div(style="display: grid; gap: 15px; margin-top: 20px;")
+            each app in applicants
+              - var isHired = (app.status && app.status.toUpperCase() === 'HIRED')
+              
+              .glass-card(style="padding: 20px; background: rgba(0,0,0,0.3); border-left: 4px solid " + (isHired ? '#10b981' : '#334155') + ";")
+                div(style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;")
+                  div
+                    h4(style="margin: 0; color: #10b981; font-size: 1.1rem;") #{app.full_name || 'Unknown Talent'}
+                    p(style="margin:0; color: #94a3b8; font-size: 0.85rem;") Role: #{app.role_title}
+                  
+                  if app.user_id
+                    a(href=`/user/${app.user_id}` style="background: #38bdf8; color: #0f172a; text-decoration: none; padding: 5px 15px; border-radius: 5px; font-size: 0.85rem; font-weight: bold;") 🔍 View Profile
+                
+                div(style="display: flex; justify-content: space-between; align-items: center;")
+                  p(style="margin: 0; font-size: 0.9rem; color: #cbd5e1;") ✉️ Contact: #{app.email || 'N/A'}
+                  span(style="font-size: 0.8rem; font-weight: bold; color: " + (isHired ? '#10b981' : '#38bdf8') + ";") STATUS: #{app.status ? app.status.toUpperCase() : 'UNKNOWN'}
+
+                //- Hire Button
+                if !isProjectCompleted && !isHired
+                  form(action="/hire-applicant" method="POST" style="margin-top: 15px;")
+                    input(type="hidden" name="applicationId" value=app.application_id)
+                    input(type="hidden" name="projectId" value=project.project_id)
+                    button(type="submit" style="background: #0ea5e9; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;") 🤝 Hire Actor
+                
+                else if !isProjectCompleted && isHired
+                  div(style="margin-top: 15px; color: #10b981; font-weight: bold;") ✅ Actor Selected for Production
+
+                //- THE REVIEW FORM (Now uses the smart variable!)
+                if isProjectCompleted && isHired
+                  div(style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(255,255,255,0.1);")
+                    h5(style="color: #f59e0b; margin: 0 0 10px 0;") ⭐️ Rate Talent Performance
+                    form(action="/reviews/add" method="POST")
+                      input(type="hidden" name="revieweeId" value=app.user_id)
+                      input(type="hidden" name="projectId" value=project.project_id)
+
+                      div(style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;")
+                        div(style="flex: 1; min-width: 120px;")
+                          label(style="display: block; font-size: 0.8rem; color: #cbd5e1; margin-bottom: 3px;") Punctuality
+                          select(name="punctuality_rating" style="width: 100%; padding: 5px; background: #000; color: white; border: 1px solid #334155; border-radius: 4px;")
+                            option(value="5") 5 - Excellent
+                            option(value="4") 4 - Good
+                            option(value="3") 3 - Average
+                        
+                        div(style="flex: 1; min-width: 120px;")
+                          label(style="display: block; font-size: 0.8rem; color: #cbd5e1; margin-bottom: 3px;") Behavior
+                          select(name="behavior_rating" style="width: 100%; padding: 5px; background: #000; color: white; border: 1px solid #334155; border-radius: 4px;")
+                            option(value="5") 5 - Excellent
+                            option(value="4") 4 - Good
+                        
+                        div(style="flex: 1; min-width: 120px;")
+                          label(style="display: block; font-size: 0.8rem; color: #cbd5e1; margin-bottom: 3px;") Skill
+                          select(name="skill_rating" style="width: 100%; padding: 5px; background: #000; color: white; border: 1px solid #334155; border-radius: 4px;")
+                            option(value="5") 5 - Excellent
+                            option(value="4") 4 - Good
+
+                      textarea(name="comment" rows="2" placeholder="Write feedback for the actor..." style="width: 100%; padding: 8px; background: #000; color: white; border: 1px solid #334155; border-radius: 4px; margin-bottom: 10px;")
+                      button(type="submit" style="background: #f59e0b; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer;") Submit Professional Review
+                
+                else if isProjectCompleted && !isHired
+                  p(style="margin-top: 15px; color: #64748b; font-style: italic; font-size: 0.85rem;") Not selected for this role.
+        else
+          p(style="color: #94a3b8; margin-top: 20px; font-style: italic;") No applicants yet.
+
+    footer.glass-card.landing-footer(style="margin-top: 50px; text-align: center; padding: 20px;")
+      p(style="color: #64748b; font-size: 0.9rem;") FirstTake | GDPR Privacy Policy | Safe-Start Guidelines
